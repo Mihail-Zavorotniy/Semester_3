@@ -10,14 +10,14 @@ class Array {
     
 public:
     explicit Array(size_t size, const T& value): size(size) {
-        head = (T*) malloc(sizeof(T) * size);
+        head = static_cast<T*>(malloc(sizeof(T) * size));
         for (int i = 0; i != size; i++){
             *(head + i) = value;
         }
     }
     
     Array(const Array& other): size(size) {
-        head = (T*) malloc(sizeof(T) * size);
+        head = static_cast<T*>(malloc(sizeof(T) * size));
         for (int i = 0; i != size; i++){
             *(head + i) = *(other.head + i);
         }
@@ -33,10 +33,11 @@ public:
     }
     
     Array& operator=(const Array& other) {
-        free(head);
+        if (other == this) { return *this; }
         
+        free(head);
         size = other.size;
-        head = (T*) malloc(sizeof(T) * size);
+        head = static_cast<T*>(malloc(sizeof(T) * size));
         for (int i = 0; i != size; i++) {
             *(head + i) = *(other.head + i);
         }
@@ -44,8 +45,9 @@ public:
     }
     
     Array& operator=(Array&& other) {
-        free(head);
+        if (other == this) { return *this; }
         
+        free(head);
         swap(size, other.size);
         swap(head, other.head);
         return *this;
