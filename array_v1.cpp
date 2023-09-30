@@ -47,7 +47,6 @@ public:
     Array& operator=(Array&& other) {
         if (&other == this) { return *this; }
         
-        free(head);
         swap(size, other.size);
         swap(head, other.head);
         return *this;
