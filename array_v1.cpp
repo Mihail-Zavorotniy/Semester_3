@@ -33,7 +33,7 @@ public:
     }
     
     Array& operator=(const Array& other) {
-        if (other == this) { return *this; }
+        if (&other == this) { return *this; }
         
         free(head);
         size = other.size;
@@ -45,7 +45,7 @@ public:
     }
     
     Array& operator=(Array&& other) {
-        if (other == this) { return *this; }
+        if (&other == this) { return *this; }
         
         free(head);
         swap(size, other.size);
