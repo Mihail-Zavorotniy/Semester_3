@@ -3,15 +3,6 @@
 using namespace std;
 
 
-void memSwap(void* a, void* b, unsigned int len) {
-    char* byteA = static_cast<char*>(a);
-    char* byteB = static_cast<char*>(b);
-    for (int i = 0; i != len; i++) {
-        swap(*(byteA + i), *(byteB + i));
-    }
-}
-
-
 struct S {
     S() = delete;
     
@@ -31,19 +22,19 @@ class Array {
 public:
     explicit Array(size_t size, const T& value): size(size) {
         head = static_cast<T*>(malloc(sizeof(T) * size));
+        T* tmpPtr = head;
         for (int i = 0; i != size; i++) {
-            T* tmp = new T(value);
-            memSwap(head + i, tmp, sizeof(T));
-            delete tmp;
+            tmpPtr = new (tmpPtr) T(value);
+            tmpPtr += 1;
         }
     }
     
-    Array(const Array& other): size(size) {
+    Array(const Array& other): size(other.size) {
         head = static_cast<T*>(malloc(sizeof(T) * size));
+        T* tmpPtr = head;
         for (int i = 0; i != size; i++) {
-            T* tmp = new T(*(other.head + i));
-            memSwap(head + i, tmp, sizeof(T));
-            delete tmp;
+            tmpPtr = new (tmpPtr) T(*(other.head + i));
+            tmpPtr += 1;
         }
     }
     
@@ -62,10 +53,10 @@ public:
         free(head);
         size = other.size;
         head = static_cast<T*>(malloc(sizeof(T) * size));
+        T* tmpPtr = head;
         for (int i = 0; i != size; i++) {
-            T* tmp = new T(*(other.head + i));
-            memSwap(head + i, tmp, sizeof(T));
-            delete tmp;
+            tmpPtr = new (tmpPtr) T(*(other.head + i));
+            tmpPtr += 1;
         }
         return *this;
     }
